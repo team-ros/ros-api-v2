@@ -1,0 +1,10 @@
+// checking for environment variables
+import "dotenv/config"
+import fs from "fs"
+
+if(!process.env.DATABASE_URL) throw "ERR 001; Database connection string not set"
+if(!/^mongodb(\+srv)?:\/\/(?:(?:(\w+)?:(\w+)?@)|:?@?)((?:[\w.-])+)(?::(\d+))?(?:\/([\w-]+))?(?:\?([\w-]+=[\w-]+(?:&[\w-]+=[\w-]+)*)?)?$/.test(process.env.DATABASE_URL)) throw "ERR 002; Database connection string invalid"
+
+if(!process.env.CERT) throw "ERR 003; No Base64 encoded Public Key Certificate set"
+
+import "./server"

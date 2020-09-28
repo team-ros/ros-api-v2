@@ -1,12 +1,11 @@
 import mongoose from "./connection"
 import { Schema, Document } from "mongoose"
-import { v4 as uuidv4 } from 'uuid'
 
 interface Iobject extends Document {
-    uuid: string
+    uuid?: string
     name: string
-    parent?: string
-    type: string
+    parent: string | null
+    type: boolean
     owner: string
 }
 
@@ -17,8 +16,7 @@ const objectSchema = new Schema({
         type: String,
         required: true,
         index: true,
-        unique: true,
-        default: uuidv4()
+        unique: true
     },
 
     // object name

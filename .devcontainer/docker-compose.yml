@@ -28,14 +28,23 @@ services:
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
+    environment:
+      DATABASE_URL: &MONGO_URL "mongodb://db:27017/rostest"
+      S3_ENDPOINT: "minio"
+      S3_PORT: 9000
+      S3_ACCESS_KEY: &S3_ACCESS_KEY "ros"
+      S3_SECRET_KEY: &S3_SECRET_KEY "ciscocisco"
+    
+    depends_on:
+      - db
+      - minio
+
   db:
     image: mongo:latest
     restart: unless-stopped
     volumes:
       - mongodb-data:/data/db
-    # networks:
-    #   - devnetwork
-
+    
     # Uncomment to change startup options
     # environment:
     #  MONGO_INITDB_ROOT_USERNAME: root
@@ -45,21 +54,18 @@ services:
     # Add "forwardPorts": ["27017"] to **devcontainer.json** to forward MongoDB locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
-  # minio:
-  #   image: minio/minio
-  #   restart: unless-stopped
-  #   environment:
-  #     MINIO_ACCESS_KEY: minio
-  #     MINIO_SECRET_KEY: minio
-  #   command: server /data
-  #   volumes:
-  #     - minio-data:/data
-  #   networks:
-  #     - devnetwork
+  minio:
+    image: minio/minio
+    restart: unless-stopped
+    environment:
+      MINIO_ACCESS_KEY: *S3_ACCESS_KEY
+      MINIO_SECRET_KEY: *S3_SECRET_KEY
+    command: server /data
+    volumes:
+      - minio-data:/data
+    ports:
+       - "9000:9000"
 
 volumes:
   mongodb-data:
-#   minio-data:
-
-# networks:
-#     devnetwork:
+  minio-data:

@@ -34,7 +34,8 @@ router.post("/",
             const result = await createDir(parent, name, user)
 
             res.json({
-                status: result
+                status: result ? true : false,
+                id: !result && null
             })
         }
         catch (err) {

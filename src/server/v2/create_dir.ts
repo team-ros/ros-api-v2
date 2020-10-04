@@ -1,5 +1,5 @@
 // initialize express router instance
-import express, { Request, Response } from "express"
+import express, { Request } from "express"
 const router = express.Router()
 
 import { body, validationResult } from "express-validator"
@@ -13,25 +13,40 @@ interface AuthenticatedRequest extends Request {
 router.post("/",
     body("name").isString().notEmpty(),
     body("parent").isUUID().optional(),
-    async (req: AuthenticatedRequest, res: Response) => {
+    async (req: AuthenticatedRequest, res) => {
+
         // return any errors from validation
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            return res.status(400).json({ status: false, errors: errors.array() })
+            return (
+                res.status(400)
+                    .json({
+                        status: false, errors: errors.array()
+                    })
+            )
         }
-    
+
         const name: string = req.body.name
         const parent: string | null = req.body.parent || null
         const user: string = req.user.sub
-    
+
         try {
             const result = await createDir(parent, name, user)
-            res.send(result)
+
+            res.json({
+                status: result ? true : false,
+                id: !result && null
+            })
         }
-        catch(err) {
+        catch (err) {
             console.log(err)
+
+            res.json({
+                status: false,
+                debug: err
+            })
         }
-        
+
     }
 )
 

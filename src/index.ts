@@ -13,4 +13,6 @@ if(!process.env.S3_SECRET_KEY) throw "ERR 005; No S3 Secret Key defined"
 
 if(!process.env.S3_ENDPOINT) throw "ERR 006; No S3 Endpoint defined"
 
+if(!process.env.S3_PORT) throw "ERR 007; No S3 Port defined"
+
 import "./server"

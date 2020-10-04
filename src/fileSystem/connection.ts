@@ -1,9 +1,9 @@
-import minio from "minio"
+import { Client } from "minio"
 
-const minioClient = new minio.Client({
+const minioClient = new Client({
     endPoint: String(process.env.S3_ENDPOINT),
-    port: 443,
-    useSSL: true,
+    port: Number(process.env.S3_PORT),
+    useSSL: Boolean(process.env.S3_USE_SSL) || false,
     accessKey: String(process.env.S3_ACCESS_KEY),
     secretKey: String(process.env.S3_SECRET_KEY)
 });

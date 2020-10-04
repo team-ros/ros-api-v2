@@ -2,13 +2,15 @@ import { objectModel } from "../database/model"
 import { v4 as uuidv4 } from "uuid"
 
 export const createDir = async (parent: string | null, name: string, owner: string) => {
+
+    const dirName = uuidv4()
     
     try {
         const checkedDubbleNames = await checkForDubbleNames(name, parent, owner)
         if(checkedDubbleNames) {
-            const createdDirectory = await createDirectory(name, parent, owner)
+            const createdDirectory = await createDirectory(name, parent, owner, dirName)
             console.log(createdDirectory)
-            return true
+            return dirName
         }
         return false
     }
@@ -27,12 +29,12 @@ const checkForDubbleNames = async (name: string, parent: string | null, owner: s
 }
 
 // creates directory
-const createDirectory = async (name: string, parent: string | null, owner: string) => {
+const createDirectory = async (name: string, parent: string | null, owner: string, uuid: string) => {
     return await objectModel.create({
         name,
         parent,
         type: false,
         owner,
-        uuid: uuidv4()
+        uuid
     })
 }

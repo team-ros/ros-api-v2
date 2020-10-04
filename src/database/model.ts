@@ -2,7 +2,7 @@ import mongoose from "./connection"
 import { Schema, Document } from "mongoose"
 
 interface Iobject extends Document {
-    uuid?: string
+    uuid: string
     name: string
     parent: string | null
     type: boolean

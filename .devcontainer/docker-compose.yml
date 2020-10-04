@@ -20,7 +20,8 @@ services:
 
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
     network_mode: service:db
-
+    # networks:
+    #   - devnetwork
     # Uncomment the next line to use a non-root user for all processes.
     # user: node
 
@@ -32,6 +33,8 @@ services:
     restart: unless-stopped
     volumes:
       - mongodb-data:/data/db
+    # networks:
+    #   - devnetwork
 
     # Uncomment to change startup options
     # environment:
@@ -42,5 +45,21 @@ services:
     # Add "forwardPorts": ["27017"] to **devcontainer.json** to forward MongoDB locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
+  # minio:
+  #   image: minio/minio
+  #   restart: unless-stopped
+  #   environment:
+  #     MINIO_ACCESS_KEY: minio
+  #     MINIO_SECRET_KEY: minio
+  #   command: server /data
+  #   volumes:
+  #     - minio-data:/data
+  #   networks:
+  #     - devnetwork
+
 volumes:
   mongodb-data:
+#   minio-data:
+
+# networks:
+#     devnetwork:

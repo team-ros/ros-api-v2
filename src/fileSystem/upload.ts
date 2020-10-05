@@ -6,6 +6,7 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
 
     const path = payload.path
     const mime = payload.mimetype
+    const fileSize = payload.size
     const fileName: string = uuidv4()
 
     try {
@@ -16,7 +17,7 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
 
         const response = await FileUploader(path, mime, fileName)
         if(response) {
-            const databaseResponse = await DatabaseStore(fileName, payload.originalname, parent, owner)
+            const databaseResponse = await DatabaseStore(fileName, payload.originalname, parent, owner, fileSize)
             if(databaseResponse) {
                 return true
             }
@@ -46,14 +47,15 @@ const FileUploader = async (path: string, mime: string, fileName: string) => {
 
 }
 
-const DatabaseStore = async (uuid: string, name: string, parent: string | null, owner: string) => {
+const DatabaseStore = async (uuid: string, name: string, parent: string | null, owner: string, size: number) => {
     try {
         const result = await objectModel.create({
             uuid,
             name,
             parent,
             owner,
-            type: true
+            type: true,
+            file_size: size
         })
         return result
     }

@@ -1,12 +1,14 @@
 import mongoose from "./connection"
 import { Schema, Document } from "mongoose"
 
-interface Iobject extends Document {
+export interface Iobject extends Document {
     uuid: string
     name: string
     parent: string | null
     type: boolean
     owner: string
+    file_size?: number
+    created_at?: number
 }
 
 const objectSchema = new Schema({
@@ -43,6 +45,17 @@ const objectSchema = new Schema({
         type: String,
         required: true,
         index: true
+    },
+
+    file_size: {
+        type: Number
+    },
+
+    // creation date unix timestamp
+    created_at: {
+        type: Number,
+        required: true,
+        default: Date.now()
     }
 
 })

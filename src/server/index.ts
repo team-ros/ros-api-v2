@@ -11,6 +11,12 @@ app.get("/health", (req, res) => {
     res.send()
 })
 
+//import login
+import login from './v2/login'
+
+//apply routes for login before authentication
+app.use('/v2/login', login)
+
 // apply middleware
 app.use(cors())
 app.use(bodyParser.json())

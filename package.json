@@ -2,7 +2,7 @@
   "name": "ros-api",
   "version": "1.0.0",
   "description": "ROS API in TypeScript",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rm -rf ./lib",

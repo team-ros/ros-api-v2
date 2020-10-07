@@ -11,7 +11,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 router.get("/",
-    query("email").isString().notEmpty(),
+    query("email").isEmail().notEmpty(),
     async (req: AuthenticatedRequest, res) => {
 
         // return any errors from validation

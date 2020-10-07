@@ -12,7 +12,7 @@ interface AuthenticatedRequest extends Request {
 
 router.post("/",
     body("name").isString().notEmpty(),
-    body("parent").isUUID().optional(),
+    body("parent").isUUID().optional({ nullable: true }),
     async (req: AuthenticatedRequest, res) => {
 
         // return any errors from validation
@@ -35,7 +35,7 @@ router.post("/",
 
             res.json({
                 status: result ? true : false,
-                id: !result && null
+                id: result ? result : null
             })
         }
         catch (err) {

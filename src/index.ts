@@ -1,7 +1,5 @@
 // checking for environment variables
 if(process.env.HEROKU_DEV) {
-    require("dotenv/config")
-
     if(!process.env.S3_BUCKET) throw "ERR 008; No S3 Bucket specified"
     if(!process.env.S3_REGION) throw "ERR 009; No S3 Region specified"
 }

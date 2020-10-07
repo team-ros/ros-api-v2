@@ -27,7 +27,6 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
         return false
     }
     catch(err) {
-        console.log("FileUploadUploader", err)
         return false
     }
 }
@@ -35,13 +34,12 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
 const FileUploader = async (path: string, mime: string, fileName: string) => {
 
     try {
-        const response = await minioClient.fPutObject("ros", fileName, path, {
+        const response = await minioClient.fPutObject((process.env.HEROKU_DEV ? String(process.env.S3_BUCKET) : "ros"), fileName, path, {
             'Content-Type': mime
         })
         return true
     }
     catch(err) {
-        console.log("FileUploadUploader", err)
         return false
     }
 
@@ -60,7 +58,6 @@ const DatabaseStore = async (uuid: string, name: string, parent: string | null, 
         return result
     }
     catch(err) {
-        console.log("FileUploadDatabaseStore", err)
         return false
     }
 }
@@ -72,12 +69,10 @@ const CheckDubbleNames = async (parent: string | null, owner: string, name: stri
             parent,
             name
         })
-        console.log("FileUploadDubbleNameResponse", response)
         if(response) return false
         return true
     }
     catch(err) {
-        console.log("FileUploadDubbleName", err)
         return false
     }
 }

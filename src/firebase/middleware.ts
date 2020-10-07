@@ -22,13 +22,15 @@ export const authMiddleware = async (req: IRequest, res: Response, next: NextFun
 
     try {
         const tokenResponse = await admin.auth().verifyIdToken(token)
-        req.user.uid = tokenResponse.uid
+        req.user = {
+            sub: tokenResponse.uid
+        }
         next()
     }
     catch(err) {
         res.status(403).json({
             status: false,
-            message: "access token not valid"
+            message: "access token not valid",
         })
     }
 

@@ -2,17 +2,16 @@
 import express, { Request } from "express"
 const router = express.Router()
 
-import { body, validationResult } from "express-validator"
+import { query, validationResult } from "express-validator"
 
-import { createDir } from "../../fileSystem/create_dir"
+import { login } from "../../user/login"
 
 interface AuthenticatedRequest extends Request {
     user?: any
 }
 
-router.post("/",
-    body("name").isString().notEmpty(),
-    body("parent").isUUID().optional({ nullable: true }),
+router.get("/",
+    query("email").isEmail().notEmpty(),
     async (req: AuthenticatedRequest, res) => {
 
         // return any errors from validation
@@ -26,21 +25,17 @@ router.post("/",
             )
         }
 
-        const name: string = req.body.name
-        const parent: string | null = req.body.parent || null
-        const user: string = req.user.sub
+        const email: any = req.query.email
 
         try {
-            const result = await createDir(parent, name, user)
+            const result = await login(email)
 
             res.json({
-                status: result ? true : false,
-                id: result ? result : null
+                status: true,
+                exists: result
             })
         }
         catch (err) {
-            console.log(err)
-
             res.json({
                 status: false,
                 debug: err

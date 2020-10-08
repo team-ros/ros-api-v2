@@ -46,7 +46,7 @@ services:
     volumes:
       - mongodb-data:/data/db
     ports:
-        - "27017:27017"
+      - "27017:27017"
     
     # Uncomment to change startup options
     # environment:
@@ -67,8 +67,22 @@ services:
     volumes:
       - minio-data:/data
     ports:
-       - "9000:9000"
+      - "9000:9000"
+
+  elastic:
+    image: elasticsearch:7.9.2
+    restart: unless-stopped
+    environment:
+      - "discovery.type=single-node"
+      - "node.name=elastic"
+      - "bootstrap.memory_lock=true"
+    volumes:
+    - elastic-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 
 volumes:
   mongodb-data:
   minio-data:
+  elastic-data:

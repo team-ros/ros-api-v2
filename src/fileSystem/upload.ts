@@ -3,11 +3,6 @@ import { v4 as uuidv4 } from "uuid"
 import minioClient from "./connection"
 import fs from "fs"
 
-// object detection
-import cocoSsd from "@tensorflow-models/coco-ssd"
-import tf from "@tensorflow/tfjs"
-
-
 export const uploader = async (payload: Express.Multer.File, parent: string | null, owner: string) => {
 
     const path = payload.path

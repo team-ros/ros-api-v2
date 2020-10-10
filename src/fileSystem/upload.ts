@@ -1,6 +1,12 @@
 import { objectModel } from "../database/model"
 import { v4 as uuidv4 } from "uuid"
 import minioClient from "./connection"
+import fs from "fs"
+
+// object detection
+import cocoSsd from "@tensorflow-models/coco-ssd"
+import tf from "@tensorflow/tfjs"
+
 
 export const uploader = async (payload: Express.Multer.File, parent: string | null, owner: string) => {
 
@@ -79,7 +85,7 @@ const CheckDubbleNames = async (parent: string | null, owner: string, name: stri
 
 
 const imageClassifier = () => {
-
+    
 }
 
 const fileClassifier = () => {

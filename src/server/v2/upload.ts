@@ -33,7 +33,6 @@ router.put("/",
         const parent: any = req.query.parent || null
         const owner: string = req.user.sub
 
-
         try {
             const response = await uploader(file, parent, owner)
 

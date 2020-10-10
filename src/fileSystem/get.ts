@@ -1,15 +1,26 @@
 import { objectModel, Iobject } from "../database/model"
+import minioClient from "./connection"
 
-export const get = async (uuid: string, owner: string) => {
+export const get = async (object_id: string | null, owner: string) => {
 
     try {
+        // Directory Listing on Root
+        if(!object_id) {
+            const rootDirectoryListing = await DirectoryListing(null, owner)
+            return {
+                status: true,
+                listing: rootDirectoryListing
+            }
+        }
+        const uuid = object_id
+
         const databaseResult = await FetchFromDatabase(uuid, owner)
 
         if(databaseResult) {
 
             // Directory Listing
             if(!databaseResult.type) {
-                let listingResponse = await DirectoryListing(uuid)
+                let listingResponse = await DirectoryListing(uuid, owner)
                 return {
                     status: true,
                     listing: listingResponse
@@ -18,7 +29,11 @@ export const get = async (uuid: string, owner: string) => {
 
             // Get File URL
             if(databaseResult.type) {
-
+                const fileURL = await GetFileURL(uuid)
+                return {
+                    status: true,
+                    url: fileURL
+                }
             }
 
         }
@@ -52,9 +67,10 @@ const FetchFromDatabase = async (uuid: string, owner: string) => {
     }
 }   
 
-const DirectoryListing = async (parent: string) => {
+const DirectoryListing = async (parent: string | null, owner: string) => {
     try {
-        const response = await objectModel.find({ parent })
+        const response = await objectModel.find({ parent, owner })
+        console.log(response)
         if(response === []) return response
         return DirectoryListingSerializer(response)
     }
@@ -77,7 +93,14 @@ const DirectoryListingSerializer = (listing: Iobject[] ) => {
     })
 }
 
-const GetFileURL = async (uuid: String) => {
-
+const GetFileURL = async (uuid: string) => {
+    try {
+        const presignedURL = await minioClient.presignedGetObject((process.env.HEROKU_DEV ? String(process.env.S3_BUCKET) : "ros"), uuid, 24*60*60)
+        return presignedURL
+    }
+    catch(err) {
+        console.log(err)
+        return false
+    }
 }
 

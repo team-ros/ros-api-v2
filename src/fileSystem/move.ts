@@ -1,4 +1,3 @@
-import { mod } from "@tensorflow/tfjs"
 import { objectModel } from "../database/model"
 
 export const move = async (parent: string | null, name: string, object_id: string, owner: string) => {    

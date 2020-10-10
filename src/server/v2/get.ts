@@ -11,7 +11,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 router.get("/",
-    query("object_id").isUUID().notEmpty(),
+    query("object_id").isUUID().optional({ nullable: true }),
     async (req: AuthenticatedRequest, res) => {
 
         // return any errors from validation

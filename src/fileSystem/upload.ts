@@ -1,6 +1,7 @@
 import { objectModel } from "../database/model"
 import { v4 as uuidv4 } from "uuid"
 import minioClient from "./connection"
+import fs from "fs"
 
 export const uploader = async (payload: Express.Multer.File, parent: string | null, owner: string) => {
 
@@ -11,6 +12,7 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
 
     try {
         const dubbleNameResponse = await CheckDubbleNames(parent, owner, payload.originalname)
+
         if(!dubbleNameResponse){
             return false
         }
@@ -40,6 +42,7 @@ const FileUploader = async (path: string, mime: string, fileName: string) => {
         return true
     }
     catch(err) {
+        console.log(err)
         return false
     }
 
@@ -79,7 +82,7 @@ const CheckDubbleNames = async (parent: string | null, owner: string, name: stri
 
 
 const imageClassifier = () => {
-
+    
 }
 
 const fileClassifier = () => {

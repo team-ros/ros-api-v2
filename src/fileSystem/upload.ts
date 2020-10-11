@@ -12,6 +12,7 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
 
     try {
         const dubbleNameResponse = await CheckDubbleNames(parent, owner, payload.originalname)
+
         if(!dubbleNameResponse){
             return false
         }
@@ -41,6 +42,7 @@ const FileUploader = async (path: string, mime: string, fileName: string) => {
         return true
     }
     catch(err) {
+        console.log(err)
         return false
     }
 

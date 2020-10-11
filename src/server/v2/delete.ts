@@ -10,7 +10,7 @@ interface AuthenticatedRequest extends Request {
     user?: any
 }
 
-router.post("/",
+router.delete("/",
     body("object_id").isUUID(),
     async (req: AuthenticatedRequest, res) => {
 

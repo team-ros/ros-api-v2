@@ -15,7 +15,8 @@ export const deleteObj = async (object_id: string, owner: string) => {
             }
         }
         if(checkObjectExists === "file") {
-
+            await deleteSingleObject(object_id)
+            return true
         }
         return false
     }
@@ -33,7 +34,6 @@ const checkIfObjectExists = async (object_id: string, owner: string) => {
             return "dir"
         }
         else {
-            console.log("CheckIfObjectExists", result)
             return false
         }
     }
@@ -45,7 +45,7 @@ const checkIfObjectExists = async (object_id: string, owner: string) => {
 
 const deleteSingleObject = async (uuid: string): Promise<void> => {
     try {
-        const databaseDelete = await objectModel.remove({ uuid })
+        const databaseDelete = await objectModel.deleteOne({ uuid })
         const s3Delete = await minioClient.removeObject((process.env.HEROKU_DEV ? String(process.env.S3_BUCKET) : "ros"), uuid)
     }
     catch(err) {
@@ -67,8 +67,6 @@ const checkForChildren = async (uuid: string, owner: string) => {
                 }
             },
         ])
-        console.log(response)
-        console.log(JSON.stringify(response))
         return response
     }
     catch(err) {

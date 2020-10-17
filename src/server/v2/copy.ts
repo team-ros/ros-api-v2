@@ -2,21 +2,18 @@
 import express, { Request } from "express"
 const router = express.Router()
 
-import { query, validationResult } from "express-validator"
+import { body, validationResult } from "express-validator"
 
-import multer from "multer"
-const upload = multer({ dest: "/tmp" })
-
-import { uploader } from "../../fileSystem/upload"
+import { Copy } from "../../fileSystem/copy"
 
 interface AuthenticatedRequest extends Request {
     user?: any
 }
 
-router.put("/",
-    query("parent").isUUID().optional({ nullable: true }),
-    query("name").isString().optional({ nullable: true }),
-    upload.single("file"),
+router.post("/",
+    body("object_id").isString().notEmpty(),
+    body("parent").isUUID().optional({ nullable: true }),
+    body("name").isString(),
     async (req: AuthenticatedRequest, res) => {
 
         // return any errors from validation
@@ -30,20 +27,18 @@ router.put("/",
             )
         }
 
-        const file = req.file
-        const parent: any = req.query.parent || null
-        const owner: string = req.user.sub
-        const name: any = req.query.name || null
+        const name: string = req.body.name
+        const parent: string | null = req.body.parent || null
+        const user: string = req.user.sub
+        const uuid = req.body.object_id
 
         try {
-            const response = await uploader(file, parent, owner, name)
-
-            res.json({
-                status: response
-            })
+            const response = await Copy(parent, uuid, user, name)
+            res.json({ status: response })
         }
-        catch(err) {
+        catch (err) {
             console.log(err)
+
             res.json({
                 status: false,
                 debug: err
@@ -52,5 +47,7 @@ router.put("/",
 
     }
 )
+
+
 
 export default router

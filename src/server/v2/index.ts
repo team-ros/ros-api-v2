@@ -9,6 +9,7 @@ import get from "./get"
 import move from "./move"
 import deleteObj from "./delete"
 import deleteUser from "./delete_user"
+import copy from "./copy"
 
 router.use("/create_dir", createDir)
 router.use("/upload", upload)
@@ -16,5 +17,6 @@ router.use("/get", get)
 router.use("/move", move)
 router.use("/delete", deleteObj)
 router.use("/delete_user", deleteUser)
+router.use("/copy", copy)
 
 export default router

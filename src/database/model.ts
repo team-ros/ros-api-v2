@@ -55,7 +55,7 @@ const objectSchema = new Schema({
     created_at: {
         type: Number,
         required: true,
-        default: Date.now()
+        default: Date.now
     }
 
 })

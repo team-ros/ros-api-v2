@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid"
 import minioClient from "./connection"
 import fs from "fs"
 
-export const uploader = async (payload: Express.Multer.File, parent: string | null, owner: string) => {
+export const uploader = async (payload: Express.Multer.File, parent: string | null, owner: string, name: string | null) => {
 
     const path = payload.path
     const mime = payload.mimetype
@@ -11,7 +11,7 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
     const fileName: string = uuidv4()
 
     try {
-        const dubbleNameResponse = await CheckDubbleNames(parent, owner, payload.originalname)
+        const dubbleNameResponse = await CheckDubbleNames(parent, owner, name || payload.originalname)
 
         if(!dubbleNameResponse){
             return false
@@ -19,7 +19,7 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
 
         const response = await FileUploader(path, mime, fileName)
         if(response) {
-            const databaseResponse = await DatabaseStore(fileName, payload.originalname, parent, owner, fileSize)
+            const databaseResponse = await DatabaseStore(fileName, name || payload.originalname, parent, owner, fileSize)
             if(databaseResponse) {
                 return true
             }

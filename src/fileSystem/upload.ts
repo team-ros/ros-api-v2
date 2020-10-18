@@ -2,6 +2,7 @@ import { objectModel } from "../database/model"
 import { v4 as uuidv4 } from "uuid"
 import minioClient from "./connection"
 import fs from "fs"
+import { Indexer } from "../search/indexer"
 
 export const uploader = async (payload: Express.Multer.File, parent: string | null, owner: string, name: string | null) => {
 
@@ -17,10 +18,22 @@ export const uploader = async (payload: Express.Multer.File, parent: string | n
             return false
         }
 
+        const classifierResponse = await Classifier(payload.path, payload.mimetype)
+
         const response = await FileUploader(path, mime, fileName)
         if(response) {
             const databaseResponse = await DatabaseStore(fileName, name || payload.originalname, parent, owner, fileSize)
             if(databaseResponse) {
+                const indexResponse = await Indexer({
+                    owner,
+                    name: name || payload.originalname,
+                    id: fileName,
+                    file_type: payload.mimetype,
+                    file_size: payload.size,
+                    created_at: Date.now(),
+                    text: classifierResponse ? String(classifierResponse) : undefined
+                })
+                if(!indexResponse) console.log("could not index file")
                 return true
             }
             return false
@@ -80,11 +93,27 @@ const CheckDubbleNames = async (parent: string | null, owner: string, name: stri
     }
 }
 
+import { ImageClassifier } from "../search/image_classifier"
+import { PdfClassifier } from "../search/pdf_classifier"
 
-const imageClassifier = () => {
-    
-}
+const Classifier = async (path: string, mime: string) => {
+    try {
 
-const fileClassifier = () => {
+        // image classifier
+        if(mime.startsWith("image")) {
+            const response = await ImageClassifier(path)
+            if(response) return response
+        }
 
+        // pdf classifier
+        if(mime === "application/pdf") {
+            const response = await PdfClassifier(path)
+            if(response) return response
+        }
+        return true
+    }
+    catch(err) {
+        console.log(err)
+        return false
+    }
 }

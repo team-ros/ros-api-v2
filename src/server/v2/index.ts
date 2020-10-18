@@ -10,6 +10,7 @@ import move from "./move"
 import deleteObj from "./delete"
 import deleteUser from "./delete_user"
 import copy from "./copy"
+import search from "./search"
 
 router.use("/create_dir", createDir)
 router.use("/upload", upload)
@@ -18,5 +19,6 @@ router.use("/move", move)
 router.use("/delete", deleteObj)
 router.use("/delete_user", deleteUser)
 router.use("/copy", copy)
+router.use("/search", search)
 
 export default router

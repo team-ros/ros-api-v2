@@ -87,7 +87,7 @@ const DirectoryListingSerializer = (listing: Iobject[] ) => {
             name: value.name,
             parent: value.parent,
             type: value.type ? "file" : "directory",
-            size: value.type ? value.file_size : null,
+            size: value.type ? value.file_size : 0,
             date: value.created_at
         }
     })
